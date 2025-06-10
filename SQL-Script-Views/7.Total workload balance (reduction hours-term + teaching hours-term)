@@ -1,0 +1,17 @@
+SELECT
+  C.LECNO,
+  C.TERM,
+  SUM(C.CNTLEC)                                 AS teach_hours,
+  COALESCE(SUM(R.REDUCTION), 0)                  AS reduction_hours,
+  SUM(C.CNTLEC) + COALESCE(SUM(R.REDUCTION), 0)  AS total_workload
+FROM DB2INST1.COURSEOFFERING AS C
+LEFT JOIN DB2INST1.WORKLOADREDUCTION AS R
+  ON C.LECNO = R.LEC_NO
+ AND C.TERM  = R.TERM
+GROUP BY
+  C.LECNO,
+  C.TERM
+ORDER BY
+  C.LECNO,
+  C.TERM
+;

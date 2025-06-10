@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PTDB Logical Design v3" database="LogicalDesign" id="a405f96c-ed34-46f9-b4fd-0f2d69a9e828" >
+	<schema name="PTDB Logical Design v3" >
+		<table name="WorkLoadReduction" prior="Work" >
+			<column name="reductionId" type="INT" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="term" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="lecNo" prior="lec_no" type="INT" jt="4" mandatory="y" />
+			<column name="jobTitle" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="reduction" type="INT" jt="4" mandatory="y" />
+			<index name="pk_WorkLoadReduction" unique="PRIMARY_KEY" >
+				<column name="reductionId" />
+			</index>
+			<index name="unq_lec_no" unique="UNIQUE_INDEX" >
+				<column name="lecNo" />
+			</index>
+			<index name="unq_term" unique="UNIQUE_INDEX" >
+				<column name="term" />
+			</index>
+			<fk name="fk_workloadreduction_lecturer" to_schema="PTDB Logical Design v3" to_table="lecturer" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="lecNo" pk="lecNo" />
+			</fk>
+			<fk name="fk_workloadreduction_semester" to_schema="PTDB Logical Design v3" to_table="semester" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="term" pk="term" />
+			</fk>
+		</table>
+		<table name="courseOffering" prior="course" >
+			<column name="offeringId" type="INT" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="sbjNo" type="NVARCHAR" length="25" jt="12" mandatory="y" />
+			<column name="lecNo" type="INT" jt="4" mandatory="y" />
+			<column name="term" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<column name="cntLec" type="DECIMAL" jt="3" mandatory="y" />
+			<column name="cntCurr" type="INT" jt="4" mandatory="y" />
+			<column name="cntSchd" type="INT" jt="4" mandatory="y" />
+			<column name="assNotes" type="VARCHAR" length="150" jt="12" />
+			<index name="pk_courseOffering" unique="PRIMARY_KEY" >
+				<column name="offeringId" />
+				<column name="sbjNo" />
+				<column name="lecNo" />
+				<column name="term" />
+			</index>
+			<fk name="fk_courseoffering_subject" to_schema="PTDB Logical Design v3" to_table="subject" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="sbjNo" pk="sbjNo" />
+			</fk>
+			<fk name="fk_courseoffering_lecturer" to_schema="PTDB Logical Design v3" to_table="lecturer" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="lecNo" pk="lecNo" />
+			</fk>
+			<fk name="fk_courseoffering_semester" to_schema="PTDB Logical Design v3" to_table="semester" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="term" pk="term" />
+			</fk>
+		</table>
+		<table name="lecturer" prior="lectu" >
+			<column name="lecNo" type="INT" jt="4" mandatory="y" />
+			<column name="lecName" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="lec1stn" type="VARCHAR" length="100" jt="12" />
+			<column name="lecRoom" type="VARCHAR" length="20" jt="12" />
+			<column name="lecNotes" type="VARCHAR" length="150" jt="12" />
+			<column name="isProf" type="BOOLEAN" jt="-7" mandatory="y" />
+			<column name="lecDept" type="VARCHAR" length="5" jt="12" mandatory="y" />
+			<column name="supervisor" type="VARCHAR" length="100" jt="12" />
+			<index name="pk_lecturer" unique="PRIMARY_KEY" >
+				<column name="lecNo" />
+			</index>
+		</table>
+		<table name="semester" prior="Entity" >
+			<column name="term" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<index name="pk_semester" unique="PRIMARY_KEY" >
+				<column name="term" />
+			</index>
+		</table>
+		<table name="subject" prior="Entity" >
+			<column name="sbjNo" prior="sbj_no" type="VARCHAR" length="25" jt="12" mandatory="y" />
+			<column name="sbjLevel" type="INT" jt="4" mandatory="y" />
+			<column name="studyPrg" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="sbjName" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="elective" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="numCurr" type="INT" jt="4" mandatory="y" />
+			<column name="numSchd" type="INT" jt="4" mandatory="y" />
+			<column name="srvProvider" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="srvClient" type="VARCHAR" length="10" jt="12" mandatory="y" />
+			<column name="sbjNotes" type="VARCHAR" length="150" jt="12" />
+			<index name="pk_subject" unique="PRIMARY_KEY" >
+				<column name="sbjNo" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Diagram" id="71017de5-feac-46d1-abb1-57175b4f60d9" show_relation="columns" >
+		<entity schema="PTDB Logical Design v3" name="subject" color="C1D8EE" x="60" y="380" />
+		<entity schema="PTDB Logical Design v3" name="lecturer" color="C1D8EE" x="360" y="60" />
+		<entity schema="PTDB Logical Design v3" name="semester" color="C1D8EE" x="680" y="380" />
+		<entity schema="PTDB Logical Design v3" name="courseOffering" color="C1D8EE" x="360" y="380" />
+		<entity schema="PTDB Logical Design v3" name="WorkLoadReduction" color="C1D8EE" x="680" y="60" />
+	</layout>
+</project>

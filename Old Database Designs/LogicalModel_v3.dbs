@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PlanningToolDB" database="MySql" id="MySql-18cd" >
+	<schema name="planningtooldb" >
+		<table name="course_offering" prior="tbl" >
+			<column name="offering_id" type="INT" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="sbj_no" type="VARCHAR" length="25" jt="12" />
+			<column name="lec_no" type="INT" jt="4" />
+			<column name="term" type="VARCHAR" length="20" jt="12" />
+			<column name="cnt_lec" type="FLOAT" jt="7" mandatory="y" />
+			<column name="cnt_curr" type="INT" jt="4" mandatory="y" />
+			<column name="cnt_schd" type="INT" jt="4" mandatory="y" />
+			<column name="ass_notes" type="VARCHAR" length="150" jt="12" />
+			<index name="pk_course_offering" unique="PRIMARY_KEY" >
+				<column name="offering_id" />
+			</index>
+			<index name="fk_course_offering_subject" unique="NORMAL" >
+				<column name="sbj_no" />
+			</index>
+			<index name="fk_course_offering_lecturer" unique="NORMAL" >
+				<column name="lec_no" />
+			</index>
+			<index name="fk_course_offering_semester" unique="NORMAL" >
+				<column name="term" />
+			</index>
+			<fk name="fk_course_offering_subject" to_schema="planningtooldb" to_table="subject" >
+				<fk_column name="sbj_no" pk="sbj_no" />
+			</fk>
+			<fk name="fk_course_offering_lecturer" to_schema="planningtooldb" to_table="lecturer" >
+				<fk_column name="lec_no" pk="lec_no" />
+			</fk>
+			<fk name="fk_course_offering_semester" to_schema="planningtooldb" to_table="semester" >
+				<fk_column name="term" pk="term" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="lecturer" prior="tbl" >
+			<column name="lec_no" type="INT" jt="4" mandatory="y" />
+			<column name="lec_name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="lec_1stn" type="VARCHAR" length="100" jt="12" />
+			<column name="lec_room" type="VARCHAR" length="20" jt="12" />
+			<column name="lec_notes" type="VARCHAR" length="150" jt="12" />
+			<column name="is_prof" type="BOOLEAN" jt="16" mandatory="y" />
+			<column name="lec_dept" type="VARCHAR" length="5" jt="12" mandatory="y" />
+			<column name="supervisor" type="VARCHAR" length="100" jt="12" />
+			<index name="pk_lecturer" unique="PRIMARY_KEY" >
+				<column name="lec_no" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="reduction_stg" prior="tbl" >
+			<column name="reduction_id" type="INT" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="term" type="VARCHAR" length="20" jt="12" />
+			<column name="name" type="VARCHAR" length="100" jt="12" />
+			<column name="job_title" type="VARCHAR" length="100" jt="12" />
+			<column name="reduction" type="INT" jt="4" />
+			<index name="pk_reduction_stg" unique="PRIMARY_KEY" >
+				<column name="reduction_id" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="semester" prior="tbl" >
+			<column name="term" type="VARCHAR" length="20" jt="12" mandatory="y" />
+			<index name="pk_semester" unique="PRIMARY_KEY" >
+				<column name="term" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="subject" prior="tbl" >
+			<column name="sbj_no" type="VARCHAR" length="25" jt="12" mandatory="y" />
+			<column name="sbj_level" type="INT" jt="4" mandatory="y" />
+			<column name="study_prg" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="sbj_name" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="elective" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="num_curr" type="INT" jt="4" mandatory="y" />
+			<column name="num_schd" type="INT" jt="4" mandatory="y" />
+			<column name="srv_provider" type="CHAR" length="10" jt="1" mandatory="y" />
+			<column name="srv_client" type="VARCHAR" length="10" jt="12" mandatory="y" />
+			<column name="sbj_notes" type="VARCHAR" length="100" jt="12" />
+			<index name="pk_subject" unique="PRIMARY_KEY" >
+				<column name="sbj_no" />
+			</index>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="test" prior="tbl" >
+			<column name="test" type="VARCHAR" length="200" jt="12" />
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+		<table name="work_load_reduction" prior="work" >
+			<column name="reduction_id" type="INT" jt="4" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+			</column>
+			<column name="term" type="VARCHAR" length="20" jt="12" />
+			<column name="lec_no" type="INT" jt="4" mandatory="y" />
+			<column name="job_title" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="reduction" type="INT" jt="4" mandatory="y" />
+			<index name="pk_work_load_reduction" unique="PRIMARY_KEY" >
+				<column name="reduction_id" />
+			</index>
+			<index name="fk_work_load_reduction_semester" unique="NORMAL" >
+				<column name="term" />
+			</index>
+			<index name="fk_work_load_reduction_lec_no" unique="NORMAL" >
+				<column name="lec_no" />
+			</index>
+			<fk name="fk_work_load_reduction_semester" to_schema="planningtooldb" to_table="semester" >
+				<fk_column name="term" pk="term" />
+			</fk>
+			<fk name="fk_work_load_reduction_lec_no" to_schema="planningtooldb" to_table="lecturer" >
+				<fk_column name="lec_no" pk="lec_no" />
+			</fk>
+			<options><![CDATA[engine=InnoDB]]></options>
+		</table>
+	</schema>
+	<layout name="Version 3 of PlanningToolDB" id="Diagram-f04" show_relation="columns" >
+		<entity schema="planningtooldb" name="test" color="C1D8EE" x="960" y="140" />
+		<entity schema="planningtooldb" name="subject" color="C1D8EE" x="60" y="400" />
+		<entity schema="planningtooldb" name="lecturer" color="C1D8EE" x="360" y="60" />
+		<entity schema="planningtooldb" name="semester" color="C1D8EE" x="700" y="400" />
+		<entity schema="planningtooldb" name="course_offering" color="C1D8EE" x="340" y="400" />
+		<entity schema="planningtooldb" name="work_load_reduction" color="C1D8EE" x="620" y="60" />
+		<entity schema="planningtooldb" name="reduction_stg" color="C1D8EE" x="1060" y="260" />
+		<script name="Insert data to work_load_reduction from reduction_stg" id="Editor-e05" language="SQL" confirmed="y" >
+			<string><![CDATA[USE planningtooldb;
+
+INSERT INTO work_load_reduction (lec_no, term, job_title, reduction)
+SELECT
+  l.lec_no,
+  s.term,
+  st.job_title,
+  st.reduction
+FROM reduction_stg AS st
+  JOIN lecturer   AS l ON l.lec_name = st.name
+  JOIN semester   AS s ON s.term     = st.term
+;]]></string>
+		</script>
+		<script name="Reset Auto increment course_offering" id="Editor-5a5" language="SQL" confirmed="y" >
+			<string><![CDATA[DELETE FROM planningtooldb.course_offering;
+ALTER TABLE planningtooldb.course_offering AUTO_INCREMENT = 1;
+]]></string>
+		</script>
+	</layout>
+</project>

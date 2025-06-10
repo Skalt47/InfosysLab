@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PlanningToolDB2" database="LogicalDesign" id="LogicalDesign-82a" >
+	<comment><![CDATA[An information system which can be loaded with data and provides an overview with customized table views.]]></comment>
+	<schema name="PlanningToolDB2" >
+		<table name="Activity" prior="A" >
+			<comment><![CDATA[The function a lecturer can do aditionally]]></comment>
+			<column name="fn" type="TEXT" jt="-1" mandatory="y" >
+				<comment><![CDATA[Functionname]]></comment>
+			</column>
+			<column name="reduction" type="INT" jt="4" />
+			<index name="pk_Activity" unique="PRIMARY_KEY" >
+				<column name="fn" />
+			</index>
+		</table>
+		<table name="Course" prior="Entity" >
+			<comment><![CDATA[Where the exam is written]]></comment>
+			<column name="fnr" type="TEXT" jt="-1" mandatory="y" >
+				<comment><![CDATA[Fachnummer]]></comment>
+			</column>
+			<column name="ppruefer" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Foreign key for a lectuerer]]></comment>
+			</column>
+			<column name="semesterId" prior="semester" type="BIGINT" jt="-5" mandatory="y" >
+				<comment><![CDATA[Foreign key to the date table for more information]]></comment>
+			</column>
+			<column name="actualHours" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[The actual hours that the lecturer gets accounted for teaching the subject (workload?)]]></comment>
+			</column>
+			<column name="fname" type="TEXT" jt="-1" mandatory="y" >
+				<comment><![CDATA[Fachname]]></comment>
+			</column>
+			<index name="pk_Course" unique="PRIMARY_KEY" >
+				<column name="fnr" />
+			</index>
+			<fk name="fk_Course_Lecturer" to_schema="PlanningToolDB2" to_table="Lecturer" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="ppruefer" pk="lecNo" />
+			</fk>
+			<fk name="fk_Course_Subject" to_schema="PlanningToolDB2" to_table="Subject" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="fnr" pk="sbjNo" />
+			</fk>
+			<fk name="fk_Course_Semester" to_schema="PlanningToolDB2" to_table="Semester" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="semesterId" pk="uid" />
+			</fk>
+		</table>
+		<table name="Lecturer" prior="Entity" >
+			<comment><![CDATA[Teaching personal like professors and contract teachers or other roles.
+
+
+Workload... (maybe extra table with other additional attributes)]]></comment>
+			<column name="lecNo" prior="ppruefer" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Unique id for the staff]]></comment>
+			</column>
+			<column name="lecName" prior="surName" type="VARCHAR" length="100" jt="12" mandatory="y" />
+			<column name="lec1stn" prior="firstName" type="VARCHAR" length="100" jt="12" />
+			<column name="isProf" prior="role" type="BOOLEAN" jt="-7" mandatory="y" >
+				<comment><![CDATA[Is professor or not]]></comment>
+			</column>
+			<column name="lecDept" type="CHAR" length="2" jt="1" />
+			<index name="pk_Lecturer" unique="PRIMARY_KEY" >
+				<column name="lecNo" />
+			</index>
+		</table>
+		<table name="OfferedCourses" prior="Entity" >
+			<comment><![CDATA[Unnormalized table holding all information
+
+Type 'Text' -> varchar<100> in db2]]></comment>
+			<column name="sbjNo" type="VARCHAR" length="100" jt="12" />
+			<column name="sbjlevel" type="INT" jt="4" />
+			<column name="studyPrg" type="VARCHAR" length="4" jt="12" />
+			<column name="sbjName" type="VARCHAR" length="100" jt="12" />
+			<column name="elective" type="CHAR" length="1" jt="1" />
+			<column name="numCurr" type="INT" jt="4" />
+			<column name="numSchd" type="INT" jt="4" />
+			<column name="srvProvider" type="VARCHAR" length="3" jt="12" />
+			<column name="srvClient" type="VARCHAR" length="4" jt="12" />
+			<column name="sbjNotes" type="VARCHAR" length="100" jt="12" />
+			<column name="lecNo" type="INT" jt="4" />
+			<column name="lecName" type="VARCHAR" length="100" jt="12" />
+			<column name="lec1stn" type="VARCHAR" length="100" jt="12" />
+			<column name="lecRoom" type="VARCHAR" length="7" jt="12" />
+			<column name="lecNotes" type="VARCHAR" length="100" jt="12" />
+			<column name="isprof" type="VARCHAR" length="100" jt="12" />
+			<column name="lecDept" type="VARCHAR" length="3" jt="12" />
+			<column name="supervisor" type="VARCHAR" length="100" jt="12" />
+			<column name="term" type="VARCHAR" length="7" jt="12" />
+			<column name="cntLec" type="INT" jt="4" />
+			<column name="assNotes" type="VARCHAR" length="100" jt="12" />
+		</table>
+		<table name="Semester" prior="Fachsemester" >
+			<column name="courseOfStudy" type="ENUM" jt="12" mandatory="y" >
+				<enumeration><![CDATA['SWB','TIB','WKB','ISB']]></enumeration>
+			</column>
+			<column name="courseOfStudySemester" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[The semester of the study course (1-7)]]></comment>
+			</column>
+			<column name="year" type="VARCHAR" length="6" jt="12" mandatory="y" >
+				<comment><![CDATA[The year of the semester]]></comment>
+			</column>
+			<column name="department" type="ENUM" jt="12" mandatory="y" >
+				<defo><![CDATA['IT']]></defo>
+				<enumeration><![CDATA['IT','SAGP']]></enumeration>
+			</column>
+			<column name="uid" type="BIGINT" jt="-5" mandatory="y" >
+				<identity><![CDATA[AUTO_INCREMENT]]></identity>
+				<comment><![CDATA[UID to have a primary key]]></comment>
+			</column>
+			<index name="pk_Semester" unique="PRIMARY_KEY" >
+				<column name="uid" />
+			</index>
+		</table>
+		<table name="Subject" prior="Entity" >
+			<comment><![CDATA[Overall listing of unique subjects]]></comment>
+			<column name="sbjNo" prior="fnr" type="TEXT" jt="-1" mandatory="y" />
+			<column name="sbjlevel" type="INT" jt="4" />
+			<column name="studyPrg" type="VARCHAR" jt="12" />
+			<column name="sbjName" type="VARCHAR" length="100" jt="12" />
+			<column name="elective" type="CHAR" length="1" jt="1" />
+			<index name="pk_Subject" unique="PRIMARY_KEY" >
+				<column name="sbjNo" />
+			</index>
+		</table>
+		<table name="WorkLoadReduction" prior="Entity" >
+			<comment><![CDATA[Unnormalized table holding all information
+
+Type 'Text' -> varchar<100> in db2]]></comment>
+			<column name="term" type="VARCHAR" length="7" jt="12" />
+			<column name="name" type="VARCHAR" length="100" jt="12" />
+			<column name="jobtitle" type="VARCHAR" length="100" jt="12" />
+			<column name="reduction" type="INT" jt="4" />
+		</table>
+		<table name="Workload" prior="Entity" >
+			<comment><![CDATA[Holds attributes which describe the workload
+
+Derived property for workload]]></comment>
+			<column name="scheduleHours" type="INT" jt="4" mandatory="y" />
+			<column name="lecturerHours" type="INT" jt="4" mandatory="y" >
+				<comment><![CDATA[Extra hours of the past semester]]></comment>
+			</column>
+		</table>
+		<table name="courseIdentifyer" prior="Entity" >
+			<column name="pnr" type="INT" jt="4" mandatory="y" />
+			<column name="group" type="CHAR" length="1" jt="1" mandatory="y" />
+			<index name="pk_courseIdentifyer" unique="PRIMARY_KEY" >
+				<column name="pnr" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Debutatsplaner" id="Diagram-1800" show_relation="columns" >
+		<entity schema="PlanningToolDB2" name="Course" color="3986C1" x="136" y="51" />
+		<entity schema="PlanningToolDB2" name="Lecturer" color="3986C1" x="374" y="51" />
+		<entity schema="PlanningToolDB2" name="Semester" color="3986C1" x="51" y="306" >
+			<column name="courseOfStudy" />
+			<column name="courseOfStudySemester" />
+			<column name="year" />
+			<column name="uid" />
+		</entity>
+		<entity schema="PlanningToolDB2" name="Subject" color="3986C1" x="374" y="306" />
+	</layout>
+	<layout name="Deputatsnachlässe" id="Diagram-153b" show_relation="columns" >
+		<entity schema="PlanningToolDB2" name="Activity" color="3986C1" x="323" y="51" />
+		<entity schema="PlanningToolDB2" name="Lecturer" color="3986C1" x="51" y="51" />
+	</layout>
+	<layout name="Zentrale Studenplanung" id="Diagram-89a" show_relation="columns" >
+		<entity schema="PlanningToolDB2" name="Course" color="3986C1" x="51" y="51" />
+	</layout>
+	<layout name="root" id="Diagram-1c3e" show_relation="columns" >
+		<comment><![CDATA[Global ERM showing all tables and relations]]></comment>
+		<entity schema="PlanningToolDB2" name="Activity" color="C1D8EE" x="306" y="680" />
+		<entity schema="PlanningToolDB2" name="Course" color="C1D8EE" x="306" y="493" />
+		<entity schema="PlanningToolDB2" name="Lecturer" color="C1D8EE" x="51" y="493" />
+		<entity schema="PlanningToolDB2" name="OfferedCourses" color="C1EECC" x="51" y="51" />
+		<entity schema="PlanningToolDB2" name="Semester" color="C1D8EE" x="578" y="493" />
+		<entity schema="PlanningToolDB2" name="WorkLoadReduction" color="C1EECC" x="306" y="51" />
+		<entity schema="PlanningToolDB2" name="Workload" color="EEC1CA" x="51" y="799" />
+	</layout>
+</project>
