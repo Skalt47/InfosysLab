@@ -20,6 +20,12 @@ if [[ "$(db2 "list database directory" | grep -io "$DB_NAME")" = "" ]]; then
     db2 "create db $DB_NAME"
 else
     echo "Database '$DB_NAME' already exists!"
+    ##### Force recreate...
+    echo "Dropping old database..."
+    db2 "drop '$DB_NAME'"
+    echo "Recreating database..."
+    db2 "create db $DB_NAME"
+    #####
 fi
 
 echo "Connecting to database '$DB_NAME'..."
