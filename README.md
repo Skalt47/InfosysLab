@@ -15,12 +15,12 @@ How to setup up the database on your vm.
 ### Installation steps
 
 1. Download the repository from GitHub (https://github.com/Skalt47/InfosysLab)
-    1. Clone it via git:
-        - Open the terminal and choose your location
-        - Clone the repository via `'git clone https://github.com/Skalt47/InfosysLab.git'`
-    2. Manual installation:
-        - Go to the GitHub repository in your browser and click on `<> code` then download it as a zip-file
-        - Extract the downloaded zip to your destination on your computer
+    1. *Clone it via git*
+        1. Open the terminal and choose your location
+        2. Clone the repository via `'git clone https://github.com/Skalt47/InfosysLab.git'`
+    2. *Manual installation*
+        1. Go to the GitHub repository in your browser and click on `<> code` then download it as a zip-file
+        2. Extract the downloaded zip to your destination on your computer
 2. Execute the `createdb.sh` inside the `./Scripts` folder (default name is test) *1
     - Creates a new database where DbSchema can connect to
     - Creates staging tables which are necessary to load the data in
@@ -50,11 +50,15 @@ How to setup up the database on your vm.
 7. Execute the `insert_select_all.sh` inside the `./Scripts` folder (default name is test)
     - Functions as an 'Entry Point' and inserts the raw data into the staging tables then activtes the scripts to insert data into the model
 
-Now you can connect to the database (by default test) and for example check the views.
+Now you can connect to the database (default name is test) and for example check the views.
 
 ### Troubleshouting
 
-***1** *Dropping of old database failed*
+Unexpected problems can occur during the setup. Most, known to us, are listed here with solutions.
+
+##
+
+***1** *Dropping of the old database failed*
 
 If this message (
 *SQL1035N  The operation failed because the specified database cannot be connected to in the mode requested.  SQLSTATE=57019*
@@ -63,9 +67,13 @@ If this message (
 To solve this problem disconnect all clients from the database and try again.</br>
 If you do not know the clients who are connected try to restart the whole service and force a disconnect on all connected clients.
 
+##
+
 ***2** *Connection on default port failed*
 
 If the connection fails on the default port the service is either not running or listening on a different port.
+
+Check if the service is running and may start it again.
 
 ...
 
