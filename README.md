@@ -17,7 +17,7 @@ How to setup up the database on your vm.
 1. Download the repository from GitHub (https://github.com/Skalt47/InfosysLab)
     - Clone it via git:
         - Open the terminal and choose your location
-        - Clone the repository via `git clone https://github.com/Skalt47/InfosysLab.git`
+        - Clone the repository via `'git clone https://github.com/Skalt47/InfosysLab.git'`
     - Manual installation:
         - Go to the GitHub repository in your browser and click on `<> code` then download it as a zip-file
         - Extract the downloaded zip to your destination on your computer
@@ -70,6 +70,7 @@ If the connection fails on the default port the service is either not running or
 ...
 
 
+
 ---
 
 ## Documentation
@@ -80,13 +81,13 @@ Documentation of the process and the overall concept of the information system.
 
 Here is the history of the different logical and physical models created with DbSchema listed.
 
-#
+##
 
 **v_1** (logical only) *also dropped*
 
 Consists of the first data model which was only inspired by some screenshots. Therefore it was quickly out-of-date when the actual data was delivered.
 
-#
+##
 
 **v_2**
 
