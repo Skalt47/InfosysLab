@@ -15,10 +15,10 @@ How to setup up the database on your vm.
 ### Installation steps
 
 1. Download the repository from GitHub (https://github.com/Skalt47/InfosysLab)
-    - Clone it via git:
+    1. Clone it via git:
         - Open the terminal and choose your location
         - Clone the repository via `'git clone https://github.com/Skalt47/InfosysLab.git'`
-    - Manual installation:
+    2. Manual installation:
         - Go to the GitHub repository in your browser and click on `<> code` then download it as a zip-file
         - Extract the downloaded zip to your destination on your computer
 2. Execute the `createdb.sh` inside the `./Scripts` folder (default name is test) *1
@@ -26,25 +26,25 @@ How to setup up the database on your vm.
     - Creates staging tables which are necessary to load the data in
 3. Open the physical model `PTDB Physical Design §{version_number}` inside DbSchema
 4. In the upper toolbar click on the 'plug'-symbole (`<<your connection>>` or`offline`) and connect to the created database
-    - 4.1 *Edit active connection*
+    1. *Edit active connection*
         - If you already have a connection go on `Edit Active Connection`:
-            - 1. Make sure to use the `jcc.DB2Driver`
-            - 2. Below select `DB2` for the JDBC URL (not manual - so that we can check the connection)
-            - 3. For `Server Location` choose `This computer, default port`
-            - 4. Under `Authentication` type in your credentials for your machine
-            - 5. For `Database` use the name the database was created with (default name is test)
-            - 6. Now check the connection (`Check (Ping)`) *2
-            - 7. Press `Connect` to continue
-    - 4.2 *Add new connection*
+            1. Make sure to use the `jcc.DB2Driver`
+            2. Below select `DB2` for the JDBC URL (not manual - so that we can check the connection)
+            3. For `Server Location` choose `This computer, default port`
+            4. Under `Authentication` type in your credentials for your machine
+            5. For `Database` use the name the database was created with (default name is test)
+            6. Now check the connection (`Check (Ping)`) *2
+            7. Press `Connect` to continue
+    2. *Add new connection*
         - If you do not have a connection go on `Add Connection`:
-            - 1. Edit the name of your connection if you want
-            - 2. Make sure the `jcc.DB2Driver` is selected
-            - 3. Below select `DB2` for the JDBC URL (not manual - so that we can check the connection)
-            - 4. For `Server Location` choose `This computer, default port`
-            - 5. Under `Authentication` type in your credentials for your machine
-            - 6. For `Database` use the name the database was created with (default name is test)
-            - 7. Now check the connection (`Check (Ping)`) *2
-            - 8. Press `Connect` to continue
+            1. Edit the name of your connection if you want
+            2. Make sure the `jcc.DB2Driver` is selected
+            3. Below select `DB2` for the JDBC URL (not manual - so that we can check the connection)
+            4. For `Server Location` choose `This computer, default port`
+            5. Under `Authentication` type in your credentials for your machine
+            6. For `Database` use the name the database was created with (default name is test)
+            7. Now check the connection (`Check (Ping)`) *2
+            8. Press `Connect` to continue
 
 auto increment...
 
@@ -58,7 +58,7 @@ refreshing model...
 
 If this message (
 *SQL1035N  The operation failed because the specified database cannot be connected to in the mode requested.  SQLSTATE=57019*
-) shows up after trying to drop the database it is propably in use.
+) shows up after trying to drop the database there are ongoing connections to the database.
 
 To solve this problem disconnect all clients from the database and try again.</br>
 If you do not know the clients who are connected try to restart the whole service and force a disconnect on all connected clients.
@@ -83,7 +83,7 @@ Here is the history of the different logical and physical models created with Db
 
 ##
 
-**v_1** (logical only) *also dropped*
+**v_1** (logical only) *dropped*
 
 Consists of the first data model which was only inspired by some screenshots. Therefore it was quickly out-of-date when the actual data was delivered.
 
