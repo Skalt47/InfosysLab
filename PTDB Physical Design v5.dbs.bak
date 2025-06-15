@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="PTDB Logical Design v5" database="Db2" id="fc633c19-5aca-4b9b-b90a-c37c5245b90c" >
+<project name="PTDB Logical Design v5" database="Db2" id="666d89fe-ee23-4777-bd7f-b6f45e3c6fb5" >
 	<schema name="DB2INST1" >
 		<table name="COURSEOFFERING" prior="courseOffering" >
 			<column name="OFFERINGID" prior="offeringId" type="INTEGER" jt="4" mandatory="y" >
@@ -86,36 +86,38 @@
 			</fk>
 		</table>
 		<view name="EXPANSIVELECTURES" >
-			<comment><![CDATA[Lists all the lectures which have more workload than hours given by the curriculum]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT SBJNO, SBJNAME, NUMSCHD, NUMCURR 
 FROM DB2INST1.SUBJECT 
 WHERE NUMSCHD > NUMCURR;]]></view_script>
 		</view>
 		<view name="EXPORTEDSUBJECTS" >
-			<comment><![CDATA[Listing subjects taught by lecturers with different departments]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
-SELECT L.LECDEPT AS department, COUNT(*) AS export_count
-FROM DB2INST1.LECTURER as L
-JOIN DB2INST1.COURSEOFFERING as C on L.LECNO = C.LECNO 
-JOIN DB2INST1.SUBJECT as S on C.SBJNO = S.SBJNO
-WHERE L.LECDEPT != S.SRVCLIENT
-GROUP BY L.LECDEPT
-ORDER BY L.LECDEPT;]]></view_script>
+SELECT * 
+FROM (
+    SELECT L.LECDEPT AS department, COUNT(*) AS export_count
+    FROM DB2INST1.LECTURER as L
+    JOIN DB2INST1.COURSEOFFERING as C on L.LECNO = C.LECNO 
+    JOIN DB2INST1.SUBJECT as S on C.SBJNO = S.SBJNO
+    WHERE L.LECDEPT != S.SRVCLIENT
+    GROUP BY L.LECDEPT
+    ORDER BY L.LECDEPT
+) as SUB;]]></view_script>
 		</view>
 		<view name="IMPORTLECTURERS" >
-			<comment><![CDATA[Listing lecturers teaching a subject with different department]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
-SELECT S.SRVCLIENT AS department, COUNT(*) AS import_count
-FROM DB2INST1.SUBJECT as S
-JOIN DB2INST1.COURSEOFFERING as C on C.SBJNO = S.SBJNO
-JOIN DB2INST1.LECTURER as L on L.LECNO = C.LECNO
-WHERE S.SRVCLIENT != L.LECDEPT
-GROUP BY S.SRVCLIENT
-ORDER BY S.SRVCLIENT;]]></view_script>
+SELECT * 
+FROM (
+    SELECT S.SRVCLIENT AS department, COUNT(*) AS import_count
+    FROM DB2INST1.SUBJECT as S
+    JOIN DB2INST1.COURSEOFFERING as C on C.SBJNO = S.SBJNO
+    JOIN DB2INST1.LECTURER as L on L.LECNO = C.LECNO
+    WHERE S.SRVCLIENT != L.LECDEPT
+    GROUP BY S.SRVCLIENT
+    ORDER BY S.SRVCLIENT
+) as SUB;]]></view_script>
 		</view>
 		<view name="LECTURERSWITHLOAD" >
-			<comment><![CDATA[Lists lecturers with 2 or 3 courses per term]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT LECNO, TERM, COUNT(*) AS offerings 
 FROM DB2INST1.COURSEOFFERING 
@@ -123,7 +125,6 @@ GROUP BY LECNO, TERM
 HAVING COUNT(*) IN (2,3);]]></view_script>
 		</view>
 		<view name="PROFESSORSWITHREDUCTION" >
-			<comment><![CDATA[Lists professors with additional workload (positive or negative)]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT DISTINCT L.LECNO 
 FROM DB2INST1.LECTURER AS L 
@@ -131,21 +132,18 @@ JOIN DB2INST1.WORKLOADREDUCTION AS R ON R.LECNO = L.LECNO
 WHERE L.ISPROF = TRUE;]]></view_script>
 		</view>
 		<view name="PROFESSORWORKLOAD" >
-			<comment><![CDATA[Shows the workload of each professor]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT LECNO, TERM, SUM(CNTLEC) AS total_lec_hrs 
 FROM DB2INST1.COURSEOFFERING 
 GROUP BY LECNO, TERM;]]></view_script>
 		</view>
 		<view name="STAFFMEMBERS" >
-			<comment><![CDATA[Differentiates between professors and contract teachers]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT ISPROF, COUNT(*) AS cnt 
 FROM DB2INST1.LECTURER 
 GROUP BY ISPROF;]]></view_script>
 		</view>
 		<view name="TEACHINGPROFESSORS" >
-			<comment><![CDATA[Lists all professors who are currently teaching]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT DISTINCT L.LECNO 
 FROM DB2INST1.LECTURER AS L 
@@ -158,23 +156,24 @@ AND NOT EXISTS (
 );]]></view_script>
 		</view>
 		<view name="TERMLIST" >
-			<comment><![CDATA[Counts and lists all the terms stored in the database]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT COUNT (DISTINCT term) AS term_count
 FROM COURSEOFFERING G;]]></view_script>
 		</view>
 		<view name="WORKLOADBALANCE" >
-			<comment><![CDATA[Shows the workload through out the terms including the reductions]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
-SELECT C.LECNO, C.TERM, SUM(C.CNTLEC) AS teach_hours, COALESCE(SUM(R.REDUCTION), 0) AS reduction_hours,  SUM(C.CNTLEC) + COALESCE(SUM(R.REDUCTION), 0) AS total_workload 
-FROM DB2INST1.COURSEOFFERING AS C 
-LEFT JOIN DB2INST1.WORKLOADREDUCTION AS R ON C.LECNO = R.LEC_NO 
-AND C.TERM  = R.TERM 
-GROUP BY C.LECNO, C.TERM 
-ORDER BY C.LECNO, C.TERM;]]></view_script>
+SELECT * 
+FROM (
+    SELECT C.LECNO, C.TERM, SUM(C.CNTLEC) AS teach_hours, COALESCE(SUM(R.REDUCTION), 0) AS reduction_hours,  SUM(C.CNTLEC) + COALESCE(SUM(R.REDUCTION), 0) AS total_workload 
+    FROM DB2INST1.COURSEOFFERING AS C 
+    LEFT JOIN DB2INST1.WORKLOADREDUCTION AS R ON C.LECNO = R.LECNO 
+    AND C.TERM = R.TERM 
+    GROUP BY C.LECNO, C.TERM 
+    ORDER BY C.LECNO, C.TERM
+) as SUB;]]></view_script>
 		</view>
 	</schema>
-	<layout name="Default Diagram" id="9ee97bac-d859-45aa-a907-f9dd991dcd41" confirmed="y" show_relation="columns" >
+	<layout name="Default Diagram" id="d7b00a51-c01e-4202-a897-f43381ea0086" confirmed="y" show_relation="columns" >
 		<entity schema="DB2INST1" name="WORKLOADREDUCTION" color="C1D8EE" x="660" y="60" />
 		<entity schema="DB2INST1" name="COURSEOFFERING" color="C1D8EE" x="340" y="380" />
 		<entity schema="DB2INST1" name="LECTURER" color="C1D8EE" x="340" y="60" />
@@ -182,13 +181,43 @@ ORDER BY C.LECNO, C.TERM;]]></view_script>
 		<entity schema="DB2INST1" name="SUBJECT" color="C1D8EE" x="60" y="380" />
 		<entity schema="DB2INST1" name="TERMLIST" color="3986C1" x="940" y="60" />
 		<entity schema="DB2INST1" name="STAFFMEMBERS" color="3986C1" x="940" y="140" />
+		<entity schema="DB2INST1" name="LECTURERSWITHLOAD" color="3986C1" x="940" y="220" />
 		<entity schema="DB2INST1" name="EXPANSIVELECTURES" color="3986C1" x="940" y="300" />
 		<entity schema="DB2INST1" name="TEACHINGPROFESSORS" color="3986C1" x="940" y="380" />
-		<entity schema="DB2INST1" name="LECTURERSWITHLOAD" color="3986C1" x="940" y="220" />
-		<entity schema="DB2INST1" name="PROFESSORWORKLOAD" color="3986C1" x="940" y="460" />
 		<entity schema="DB2INST1" name="PROFESSORSWITHREDUCTION" color="3986C1" x="1160" y="380" />
+		<entity schema="DB2INST1" name="PROFESSORWORKLOAD" color="3986C1" x="940" y="460" />
 		<entity schema="DB2INST1" name="WORKLOADBALANCE" color="3986C1" x="940" y="540" />
 		<entity schema="DB2INST1" name="IMPORTLECTURERS" color="3986C1" x="940" y="620" />
 		<entity schema="DB2INST1" name="EXPORTEDSUBJECTS" color="3986C1" x="940" y="700" />
+		<callout x="1100" y="160" pointer="SV" >
+			<comment><![CDATA[Differentiates between professors and contract teachers]]></comment>
+		</callout>
+		<callout x="1060" y="60" pointer="SV" >
+			<comment><![CDATA[Counts all terms in database]]></comment>
+		</callout>
+		<callout x="1120" y="240" pointer="SV" >
+			<comment><![CDATA[Lists lecturers with 2 or 3 courses per term]]></comment>
+		</callout>
+		<callout x="1120" y="320" pointer="SV" >
+			<comment><![CDATA[Lists all the lectures which have more workload than hours given by the curriculum]]></comment>
+		</callout>
+		<callout x="1420" y="380" pointer="SV" >
+			<comment><![CDATA[Lists all professors who are currently teaching]]></comment>
+		</callout>
+		<callout x="1480" y="420" pointer="SV" >
+			<comment><![CDATA[Lists professors with additional workload (positive or negative)]]></comment>
+		</callout>
+		<callout x="1120" y="480" pointer="SV" >
+			<comment><![CDATA[Shows the workload of each professor]]></comment>
+		</callout>
+		<callout x="1120" y="560" pointer="SV" >
+			<comment><![CDATA[Shows the workload through out the terms including the reductions]]></comment>
+		</callout>
+		<callout x="1120" y="640" pointer="SV" >
+			<comment><![CDATA[Listing lecturers teaching a subject with different department]]></comment>
+		</callout>
+		<callout x="1120" y="720" pointer="SV" >
+			<comment><![CDATA[Listing subjects taught by lecturers with different departments]]></comment>
+		</callout>
 	</layout>
 </project>

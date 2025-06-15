@@ -45,16 +45,16 @@ How to setup up the database on your vm.
             6. For `Database` use the name the database was created with (default name is test)
             7. Now check the connection (`Check (Ping)`) *2
             8. Press `Connect` to continue
+5. Click on the arrow next to `Refresh Model` and choose the option `Create or Upgrade Model in the Database`
+6. Check everthing to migrate, click `Ok` and `Execute All`
+7. Execute the `insert_select_all.sh` inside the `./Scripts` folder (default name is test)
+    - Functions as an 'Entry Point' and inserts the raw data into the staging tables then activtes the scripts to insert data into the model
 
-auto increment...
-
-refreshing model...
-
-
+Now you can connect to the database (by default test) and for example check the views.
 
 ### Troubleshouting
 
-***1** Dropping of old database failed
+***1** *Dropping of old database failed*
 
 If this message (
 *SQL1035N  The operation failed because the specified database cannot be connected to in the mode requested.  SQLSTATE=57019*
@@ -63,12 +63,11 @@ If this message (
 To solve this problem disconnect all clients from the database and try again.</br>
 If you do not know the clients who are connected try to restart the whole service and force a disconnect on all connected clients.
 
-***2** Connection on default port failed
+***2** *Connection on default port failed*
 
 If the connection fails on the default port the service is either not running or listening on a different port.
 
 ...
-
 
 
 ---
@@ -76,6 +75,21 @@ If the connection fails on the default port the service is either not running or
 ## Documentation
 
 Documentation of the process and the overall concept of the information system.
+
+### Updating the model
+
+When updating the model the Physical and therefore the Logical Design need to be changed.
+
+If major changes will be made to the Logical and Physical Design store the current Designs in the `./Old Database Designs` folder and create new ones with an updated version number.
+
+When generating the Physical Design out of the Logical Design make sure to set the auto increments again because those get lost while generating.
+Setting auto increment in the Physical Design (`OFFERINGID`, `REDUCTIONID`):
+1. Hover and double click on the attribute which should have an auto increment
+2. One the bottom right click on the arrow to open up an `Options Dialog` (the corresponding textbox should contain something like `QAUTO_INCREMENTE`)
+3. Check `GENERATE`, `ALWAYS`, `AS IDENTITY` and `STARTS WITH`
+4. As `startValue` and `incrementValue` use 1
+5. Then save all
+
 
 ### History
 
@@ -90,6 +104,8 @@ Consists of the first data model which was only inspired by some screenshots. Th
 ##
 
 **v_2**
+
+##
 
 Fill out the history path...
 

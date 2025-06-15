@@ -92,6 +92,34 @@ SELECT SBJNO, SBJNAME, NUMSCHD, NUMCURR
 FROM DB2INST1.SUBJECT 
 WHERE NUMSCHD > NUMCURR;]]></view_script>
 		</view>
+		<view name="ExportedSubjects" >
+			<comment><![CDATA[Listing subjects taught by lecturers with different departments]]></comment>
+			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
+SELECT * 
+FROM (
+    SELECT L.LECDEPT AS department, COUNT(*) AS export_count
+    FROM DB2INST1.LECTURER as L
+    JOIN DB2INST1.COURSEOFFERING as C on L.LECNO = C.LECNO 
+    JOIN DB2INST1.SUBJECT as S on C.SBJNO = S.SBJNO
+    WHERE L.LECDEPT != S.SRVCLIENT
+    GROUP BY L.LECDEPT
+    ORDER BY L.LECDEPT
+) as SUB;]]></view_script>
+		</view>
+		<view name="ImportLecturers" >
+			<comment><![CDATA[Listing lecturers teaching a subject with different department]]></comment>
+			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
+SELECT * 
+FROM (
+    SELECT S.SRVCLIENT AS department, COUNT(*) AS import_count
+    FROM DB2INST1.SUBJECT as S
+    JOIN DB2INST1.COURSEOFFERING as C on C.SBJNO = S.SBJNO
+    JOIN DB2INST1.LECTURER as L on L.LECNO = C.LECNO
+    WHERE S.SRVCLIENT != L.LECDEPT
+    GROUP BY S.SRVCLIENT
+    ORDER BY S.SRVCLIENT
+) as SUB;]]></view_script>
+		</view>
 		<view name="LecturersWithLoad" >
 			<comment><![CDATA[Lists lecturers with 2 or 3 courses per term]]></comment>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
@@ -99,6 +127,13 @@ SELECT LECNO, TERM, COUNT(*) AS offerings
 FROM DB2INST1.COURSEOFFERING 
 GROUP BY LECNO, TERM
 HAVING COUNT(*) IN (2,3);]]></view_script>
+		</view>
+		<view name="ProfessorWorkload" >
+			<comment><![CDATA[Shows the workload of each professor]]></comment>
+			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
+SELECT LECNO, TERM, SUM(CNTLEC) AS total_lec_hrs 
+FROM DB2INST1.COURSEOFFERING 
+GROUP BY LECNO, TERM;]]></view_script>
 		</view>
 		<view name="ProfessorsWithReduction" >
 			<comment><![CDATA[Lists professors with additional workload (positive or negative)]]></comment>
@@ -134,6 +169,19 @@ AND NOT EXISTS (
 SELECT COUNT (DISTINCT term) AS term_count
 FROM COURSEOFFERING G;]]></view_script>
 		</view>
+		<view name="WorkloadBalance" >
+			<comment><![CDATA[Shows the workload through out the terms including the reductions]]></comment>
+			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
+SELECT * 
+FROM (
+    SELECT C.LECNO, C.TERM, SUM(C.CNTLEC) AS teach_hours, COALESCE(SUM(R.REDUCTION), 0) AS reduction_hours,  SUM(C.CNTLEC) + COALESCE(SUM(R.REDUCTION), 0) AS total_workload 
+    FROM DB2INST1.COURSEOFFERING AS C 
+    LEFT JOIN DB2INST1.WORKLOADREDUCTION AS R ON C.LECNO = R.LECNO 
+    AND C.TERM = R.TERM 
+    GROUP BY C.LECNO, C.TERM 
+    ORDER BY C.LECNO, C.TERM
+) as SUB;]]></view_script>
+		</view>
 	</schema>
 	<layout name="Default Diagram" id="71017de5-feac-46d1-abb1-57175b4f60d9" show_relation="columns" >
 		<entity schema="db2inst1" name="WorkLoadReduction" color="C1D8EE" x="660" y="60" />
@@ -142,10 +190,14 @@ FROM COURSEOFFERING G;]]></view_script>
 		<entity schema="db2inst1" name="semester" color="C1D8EE" x="660" y="380" />
 		<entity schema="db2inst1" name="subject" color="C1D8EE" x="60" y="380" />
 		<entity schema="db2inst1" name="TermList" color="3986C1" x="940" y="60" />
-		<entity schema="db2inst1" name="LecturersWithLoad" color="3986C1" x="940" y="220" />
 		<entity schema="db2inst1" name="StaffMembers" color="3986C1" x="940" y="140" />
-		<entity schema="db2inst1" name="ProfessorsWithReduction" color="3986C1" x="940" y="460" />
-		<entity schema="db2inst1" name="TeachingProfessors" color="3986C1" x="940" y="380" />
 		<entity schema="db2inst1" name="ExpansiveLectures" color="3986C1" x="940" y="300" />
+		<entity schema="db2inst1" name="TeachingProfessors" color="3986C1" x="940" y="380" />
+		<entity schema="db2inst1" name="LecturersWithLoad" color="3986C1" x="940" y="220" />
+		<entity schema="db2inst1" name="ProfessorsWithReduction" color="3986C1" x="1160" y="380" />
+		<entity schema="db2inst1" name="ProfessorWorkload" color="3986C1" x="940" y="460" />
+		<entity schema="db2inst1" name="WorkloadBalance" color="3986C1" x="940" y="540" />
+		<entity schema="db2inst1" name="ImportLecturers" color="3986C1" x="940" y="620" />
+		<entity schema="db2inst1" name="ExportedSubjects" color="3986C1" x="940" y="700" />
 	</layout>
 </project>
