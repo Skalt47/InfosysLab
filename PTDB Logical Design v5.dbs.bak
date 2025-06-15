@@ -105,7 +105,7 @@ HAVING COUNT(*) IN (2,3);]]></view_script>
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
 SELECT DISTINCT L.LECNO 
 FROM DB2INST1.LECTURER AS L 
-JOIN DB2INST1.WORKLOADREDUCTION AS R ON R.LEC_NO = L.LECNO 
+JOIN DB2INST1.WORKLOADREDUCTION AS R ON R.LECNO = L.LECNO 
 WHERE L.ISPROF = TRUE;]]></view_script>
 		</view>
 		<view name="StaffMembers" >
@@ -125,7 +125,7 @@ WHERE L.ISPROF = TRUE
 AND NOT EXISTS (
     SELECT 1
     FROM DB2INST1.WORKLOADREDUCTION AS R
-    WHERE R.LEC_NO = L.LECNO
+    WHERE R.LECNO = L.LECNO
 );]]></view_script>
 		</view>
 		<view name="TermList" >
@@ -142,10 +142,10 @@ FROM COURSEOFFERING G;]]></view_script>
 		<entity schema="db2inst1" name="semester" color="C1D8EE" x="660" y="380" />
 		<entity schema="db2inst1" name="subject" color="C1D8EE" x="60" y="380" />
 		<entity schema="db2inst1" name="TermList" color="3986C1" x="940" y="60" />
-		<entity schema="db2inst1" name="ExpansiveLectures" color="3986C1" x="940" y="300" />
-		<entity schema="db2inst1" name="TeachingProfessors" color="3986C1" x="940" y="380" />
 		<entity schema="db2inst1" name="LecturersWithLoad" color="3986C1" x="940" y="220" />
 		<entity schema="db2inst1" name="StaffMembers" color="3986C1" x="940" y="140" />
 		<entity schema="db2inst1" name="ProfessorsWithReduction" color="3986C1" x="940" y="460" />
+		<entity schema="db2inst1" name="TeachingProfessors" color="3986C1" x="940" y="380" />
+		<entity schema="db2inst1" name="ExpansiveLectures" color="3986C1" x="940" y="300" />
 	</layout>
 </project>

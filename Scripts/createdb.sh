@@ -22,7 +22,7 @@ else
     echo "Database '$DB_NAME' already exists!"
     ##### Force recreate...
     echo "Dropping old database..."
-    db2 "drop '$DB_NAME'"
+    db2 "drop database $DB_NAME"
     echo "Recreating database..."
     db2 "create db $DB_NAME"
     #####
