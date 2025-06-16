@@ -73,16 +73,44 @@ If you do not know the clients who are connected try to restart the whole servic
 
 If the connection fails on the default port the service is either not running or listening on a different port.
 
-Check if the service is running and may start it again.
+Check if the service is stopped and may start it again.</br>
+If the service was running then db2 is not listening on port 5000 (default port). 
+You either change it manualy in the configuration file or try to connect to the used port.
 
-...
+*Find out the service name and the corresponding TCP/IP port*:</br>
+1. Use the terminal and typ in `'db2 get dbm cfg'`
+2. Look for `(SVCENAME)`. You should find a name similar to `db2c_${instance_name}`
+3. Now search for your service name in the `services` file and find out the port
+    - *On Linux*: `/etc/services`
+    - *On Windows*: `C:\winnt\system32\drivers\etc\services`
 
+*Fix the port connection*:</br>
+```
+Change the port in the file to the default port 50000 also used by DbSchema.</br>
+Then restart the service.
+
+**OR**
+
+When you already have other clients or applications using this port then change the port in DbSchema.
+Therefore edit your connection and select `Remote computer or custom port` instead of `This computer, default port`.
+Still use `localhost` as the server host but change the port to the one in the file.</br>
+Then try to connect again.
+```
 
 ---
 
 ## Documentation
 
 Documentation of the process and the overall concept of the information system.
+
+### Difficulties during the development
+
+- DbSchema does not save SQL scripts inside the Logical Design
+- Auto increments get lost while generating a Pyhsical Design
+- `Order By` SQL-Statements are not allowed while creating a view
+- DbSchema does not handle comments on views correctly
+    - Db2 does not allow comments on a view. They need to get treaded like a table to comment on. 
+    DbSchema generates SQL-Commands with `Comment On View` instead of `Comment On Table` which must be change during the execution.
 
 ### Updating the model
 
@@ -98,7 +126,6 @@ Setting auto increment in the Physical Design (`OFFERINGID`, `REDUCTIONID`):
 4. As `startValue` and `incrementValue` use 1
 5. Then save all
 
-
 ### History
 
 Here is the history of the different logical and physical models created with DbSchema listed.
@@ -107,17 +134,40 @@ Here is the history of the different logical and physical models created with Db
 
 **v_1** (logical only) *dropped*
 
-Consists of the first data model which was only inspired by some screenshots. Therefore it was quickly out-of-date when the actual data was delivered.
+Consists of the first data model which was only inspired by some screenshots. 
+Therefore it was quickly out-of-date when the actual data was delivered.
+
+Had also user views grouping tables to fit a personalized need.
 
 ##
 
-**v_2**
+**v_2** (logical only)
+
+A better worked out data model based on the first version.
 
 ##
 
-Fill out the history path...
+**v_3** (first model based on actual data)
 
-v_5 has the views implemented
+First screach of a data model with the delivered unnormalized data.
+
+##
+
+**v_4** (first functional one)
+
+Working data model with Lecturer, WorkloadReduction, Term, OfferedCourse and Subject.
+
+Everything based on the unnormalized data provided. Each attribute accept of some auto increment ids is from the tables which hold the unnormalized data.
+
+##
+
+**v_5** (with views) *latest*
+
+Based on the fourth version there are also views implemented which show some functionality of this information system.
+
+<\br>
+
+*Fill out the history path*...
 
 ---
 
