@@ -85,7 +85,6 @@ You either change it manualy in the configuration file or try to connect to the 
     - *On Windows*: `C:\winnt\system32\drivers\etc\services`
 
 *Fix the port connection*:</br>
-```
 Change the port in the file to the default port 50000 also used by DbSchema.</br>
 Then restart the service.
 
@@ -95,7 +94,6 @@ When you already have other clients or applications using this port then change 
 Therefore edit your connection and select `Remote computer or custom port` instead of `This computer, default port`.
 Still use `localhost` as the server host but change the port to the one in the file.</br>
 Then try to connect again.
-```
 
 ---
 
@@ -165,7 +163,7 @@ Everything based on the unnormalized data provided. Each attribute accept of som
 
 Based on the fourth version there are also views implemented which show some functionality of this information system.
 
-<\br>
+</br>
 
 *Fill out the history path*...
 
