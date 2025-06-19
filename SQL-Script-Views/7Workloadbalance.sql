@@ -7,5 +7,3 @@ FROM (
     GROUP BY C.LECNO, C.TERM 
     ORDER BY C.LECNO, C.TERM
 ) as SUB;
-
-# Uses a subquery because order by cant be used in top level while creation
