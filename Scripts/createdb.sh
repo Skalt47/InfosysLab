@@ -66,7 +66,7 @@ db2 -t <<- 'EOF'
     lecDept     VARCHAR(3),
     supervisor  VARCHAR(100),
     term        VARCHAR(7),
-    cntLec      INTEGER,
+    cntLec      DECIMAL(3,2),
     cntCurr     INTEGER,
     cntSchd     INTEGER,
     assNotes    VARCHAR(100)
