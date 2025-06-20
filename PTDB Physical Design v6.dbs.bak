@@ -5,7 +5,7 @@
 			<column name="SBJNO" prior="sbjNo" type="VARCHAR" length="25" jt="12" mandatory="y" />
 			<column name="LECNO" prior="lecNo" type="INTEGER" jt="4" mandatory="y" />
 			<column name="TERM" prior="term" type="VARCHAR" length="20" jt="12" mandatory="y" />
-			<column name="CNTLEC" prior="cntLec" type="DECIMAL" jt="3" mandatory="y" />
+			<column name="CNTLEC" prior="cntLec" type="DECIMAL" length="3" decimal="2" jt="3" mandatory="y" />
 			<column name="CNTCURR" prior="cntCurr" type="INTEGER" jt="4" mandatory="y" />
 			<column name="CNTSCHD" prior="cntSchd" type="INTEGER" jt="4" mandatory="y" />
 			<column name="ASSNOTES" prior="assNotes" type="VARCHAR" length="150" jt="12" />

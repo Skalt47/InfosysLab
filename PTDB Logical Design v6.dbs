@@ -158,15 +158,40 @@ FROM COURSEOFFERING G;]]></view_script>
 		</view>
 		<view name="WorkloadBalance" >
 			<view_script><![CDATA[CREATE VIEW ${nameWithSchemaName} AS 
-SELECT * 
-FROM (
-    SELECT C.LECNO, C.TERM, SUM(C.CNTLEC) AS teach_hours, COALESCE(SUM(R.REDUCTION), 0) AS reduction_hours,  SUM(C.CNTLEC) + COALESCE(SUM(R.REDUCTION), 0) AS total_workload 
-    FROM DB2INST1.COURSEOFFERING AS C 
-    LEFT JOIN DB2INST1.WORKLOADREDUCTION AS R ON C.LECNO = R.LECNO 
-    AND C.TERM = R.TERM 
-    GROUP BY C.LECNO, C.TERM 
-    ORDER BY C.LECNO, C.TERM
-) as SUB;]]></view_script>
+WITH
+  teach AS (
+    SELECT 
+      C.lecno,
+      C.term,
+      SUM(
+        CASE 
+          WHEN C.assNotes = 'gekoppelt mit WKB3' THEN 0 
+          ELSE C.CNTLEC 
+        END
+      ) AS teach_hours
+    FROM DB2INST1.CourseOffering AS C
+    GROUP BY C.lecno, C.term
+  ),
+  red AS (
+    SELECT 
+      R.lecno,
+      R.term,
+      SUM(R.reduction) AS reduction_hours
+    FROM DB2INST1.WorkloadReduction AS R
+    GROUP BY R.lecno, R.term
+  )
+SELECT
+  t.lecno,
+  t.term,
+  t.teach_hours,
+  COALESCE(r.reduction_hours,0)           AS reduction_hours,
+  t.teach_hours
+    + COALESCE(r.reduction_hours,0)       AS total_workload
+FROM teach AS t
+LEFT JOIN red   AS r
+  ON t.lecno = r.lecno
+ AND t.term  = r.term
+;]]></view_script>
 		</view>
 	</schema>
 	<layout name="Default Diagram" id="71017de5-feac-46d1-abb1-57175b4f60d9" show_relation="columns" >

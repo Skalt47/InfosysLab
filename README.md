@@ -159,9 +159,15 @@ Everything based on the unnormalized data provided. Each attribute accept of som
 
 ##
 
-**v_5** (with views) *latest*
+**v_5** (with views) 
 
 Based on the fourth version there are also views implemented which show some functionality of this information system.
+
+##
+
+**v_5** (corrected views) *latest*
+
+The views and the entities were sligthly corrected, after some mistakes were found in the meeting with the professor. Got rid of offeringid and switched to a composite key of sbjno, lecno and term. Corrected the view workloadbalance, calculation (sum) was faulty and if a lecture of 2 studyprg is combined, now so is the cntlec (only calculated once and not twice).
 
 </br>
 

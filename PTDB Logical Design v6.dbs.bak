@@ -181,10 +181,10 @@ FROM (
 		<entity schema="db2inst1" name="TeachingProfessors" color="3986C1" x="940" y="380" />
 		<entity schema="db2inst1" name="ProfessorsWithReduction" color="3986C1" x="1160" y="380" />
 		<entity schema="db2inst1" name="ProfessorWorkload" color="3986C1" x="940" y="460" />
-		<entity schema="db2inst1" name="WorkloadBalance" color="3986C1" x="940" y="540" />
 		<entity schema="db2inst1" name="ImportLecturers" color="3986C1" x="940" y="620" />
 		<entity schema="db2inst1" name="ExportedSubjects" color="3986C1" x="940" y="700" />
 		<entity schema="db2inst1" name="courseOffering" color="C1D8EE" x="340" y="380" />
+		<entity schema="db2inst1" name="WorkloadBalance" color="3986C1" x="940" y="540" />
 		<callout x="1100" y="160" pointer="SV" >
 			<comment><![CDATA[Differentiates between professors and contract teachers]]></comment>
 		</callout>
