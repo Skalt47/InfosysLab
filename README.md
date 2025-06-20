@@ -165,7 +165,7 @@ Based on the fourth version there are also views implemented which show some fun
 
 ##
 
-**v_5** (corrected views) *latest*
+**v_6** (corrected views) *latest*
 
 The views and the entities were sligthly corrected, after some mistakes were found in the meeting with the professor. Got rid of offeringid and switched to a composite key of sbjno, lecno and term. Corrected the view workloadbalance, calculation (sum) was faulty and if a lecture of 2 studyprg is combined, now so is the cntlec (only calculated once and not twice).
 
