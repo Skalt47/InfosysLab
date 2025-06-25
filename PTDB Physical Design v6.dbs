@@ -209,6 +209,7 @@ LEFT JOIN red   AS r
 		</view>
 	</schema>
 	<layout name="Default Diagram" id="d7b00a51-c01e-4202-a897-f43381ea0086" confirmed="y" show_relation="columns" >
+		<comment><![CDATA[PTDB DBSchema Documentation]]></comment>
 		<entity schema="DB2INST1" name="LECTURER" color="C1D8EE" x="340" y="60" />
 		<entity schema="DB2INST1" name="SEMESTER" color="C1D8EE" x="660" y="380" />
 		<entity schema="DB2INST1" name="TERMLIST" color="3986C1" x="940" y="60" />
